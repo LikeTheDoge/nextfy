@@ -1,0 +1,11 @@
+{
+  "name": "nextfy",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/LikeTheDoge/nextfy.git",
+  "author": "likeadoge <like_a_doge@outlook.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
