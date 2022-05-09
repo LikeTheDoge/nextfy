@@ -33,6 +33,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx"],
-  "exclude": [],
+    "src/**/*.tsx",
+    "test/**/*.ts",],
+  "exclude": []
 }
