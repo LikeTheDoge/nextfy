@@ -14,7 +14,7 @@ export class Update extends Base {
     protected asyncUpdate(fn: () => void) {
         const waiting = Promise.resolve(this.waiting)
             .then(() => (fn(), this))
-            .finally(() => this.stopWaiting(waiting))
+            // .finally(() => this.stopWaiting(waiting))
 
         this.waiting = waiting
         return waiting
