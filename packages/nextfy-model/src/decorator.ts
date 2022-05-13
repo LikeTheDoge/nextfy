@@ -4,3 +4,7 @@ export const field = (label: string, type: FieldType) => ({ constructor: cls }: 
     ModelMeta.get(cls).fields.set(key, Object.assign(new FieldInfo(), { key, label, type }))
 }
 
+
+export const label = (label:string) => (cls: Function ) => {
+    ModelMeta.get(cls).label = label
+}
