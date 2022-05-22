@@ -6,8 +6,8 @@
   "author": "likeadoge <like_a_doge@outlook.com>",
   "license": "MIT",
   "scripts": {
-    "init-pkg":"node ./script/entry/init.js pkg",
-    "init-app":"node ./script/entry/init.js app"
+    "init-pkg": "node ./script/entry/init.js pkg",
+    "init-app": "node ./script/entry/init.js app"
   },
   "devDependencies": {
     "lerna": "^4.0.0"

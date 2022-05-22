@@ -1,5 +1,5 @@
 {
-  "name": "nextfy-model",
+  "name": "nextfy-node",
   "version": "1.0.0",
   "main": "lib/cjs/index.js",
   "module": "lib/mjs/index.js",
@@ -22,7 +22,6 @@
     "@types/babel-core": "^6.25.7",
     "@types/babel__core": "^7.1.16",
     "@types/jest": "^27.5.0",
-    "@types/object-hash": "^2.2.1",
     "@types/react": "^17.0.37",
     "jest": "^27.0.3",
     "ts-jest": "^27.0.1",
@@ -30,7 +29,6 @@
     "vite": "^2.3.4"
   },
   "dependencies": {
-    "nextfy-reactive": "^1.0.0",
-    "object-hash": "^3.0.0"
+    "nextfy-reactive": "^1.0.0"
   }
 }
