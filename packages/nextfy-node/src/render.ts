@@ -3,18 +3,24 @@ export enum RenderNodeType {
 }
 
 export enum RenderOpCode {
-    insertElement, insertText,
-    cacheNode, moveNode,
-    destoryNode,
+    insert,
+    cache, 
+    move,
+    destory,
 }
 
 export abstract class RenderNode {
+    static nodeId = () => Math.random().toString()
     abstract type: RenderNodeType
     parent?: RenderElementNode
     root: RenderRoot
     nodeId: string = Math.random().toString()
-    constructor(root: RenderRoot) {
+    constructor(root: RenderRoot, id?: string) {
         this.root = root
+        this.nodeId = id || this.nodeId
+        if(this.root.nodes.has(this.nodeId)){
+            throw new Error(`RenderNode: id ${this.nodeId} is already exist!!!`)
+        } 
         this.root.nodes.set(this.nodeId, this)
     }
 }
@@ -44,14 +50,14 @@ export class RenderRoot {
         const { type } = option
 
         if (type === RenderNodeType.ElementNode) {
-            const { tag = 'div', attr = {}, style = {}, children = [] } = option
-            return Object.assign(new RenderElementNode(this), {
+            const { id, tag = 'div', attr = {}, style = {}, children = [] } = option
+            return Object.assign(new RenderElementNode(this, id), {
                 tag, attr, style, children: children.map((v: any) => this.prase(v))
             })
         }
         if (type === RenderNodeType.TextNode) {
-            const { text = '' } = option
-            return Object.assign(new RenderTextNode(this), { text })
+            const { id, text = '' } = option
+            return Object.assign(new RenderTextNode(this, id), { text })
         }
 
         throw new Error('parse: node type error')
@@ -96,23 +102,19 @@ export class RenderRoot {
         // 从 node 树中取出 node
         if (node.parent) {
             node.parent.children = node.parent.children.filter(v => v.nodeId !== node.nodeId)
+            node.parent = undefined
         } else {
             this.roots = this.roots.filter(v => v.nodeId !== node.nodeId)
             this.cache = this.cache.filter(v => v.nodeId !== node.nodeId)
         }
     }
 
-    [RenderOpCode.insertText](text: string, pos: { before?: string, parent?: string } = {},) {
-        const node = Object.assign(new RenderTextNode(this), { text })
-        this.insert(node, pos)
-        return node
-    }
-    [RenderOpCode.insertElement](option: any, pos: { before?: string, parent?: string } = {}) {
+    [RenderOpCode.insert](option: any, pos: { before?: string, parent?: string } = {}) {
         const node = this.prase(option)
         this.insert(node, pos)
-        return node
+        return node.nodeId
     }
-    [RenderOpCode.destoryNode](nodeId: string) {
+    [RenderOpCode.destory](nodeId: string) {
         const node = this.get(nodeId)
 
         this.unlink(node)
@@ -125,14 +127,14 @@ export class RenderRoot {
         }
         write_off(node)
     }
-    [RenderOpCode.cacheNode](nodeId: string) {
+    [RenderOpCode.cache](nodeId: string) {
         const node = this.get(nodeId)
 
         this.unlink(node)
 
         this.cache = this.cache.concat([node])
     }
-    [RenderOpCode.moveNode](nodeId: string, pos: { before?: string, parent?: string } = {}) {
+    [RenderOpCode.move](nodeId: string, pos: { before?: string, parent?: string } = {}) {
         const node = this.get(nodeId)
         this.unlink(node)
         this.insert(node, pos)
