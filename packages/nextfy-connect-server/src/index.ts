@@ -16,19 +16,59 @@ Connect 建立流程
     6. 服务端收到监听 Zone 的名称，添加监听函数，完成 Connect
 */
 export enum ConnectStatus {
-    BeforeInit, // 开始建立 ws 链接
+    Created, // 开始建立 ws 链接
     Inited, // 成功建立 ws 链接，开始处理 id 
-    Installed, // 成功建立 Connection 通信
-    Registed, // 
-
+    Registed, //收到需监听 Zone 的名称, 成功建立 Connection 通信
 }
 
 
 export class Connection {
     ws: WebSocket
-    connectId = Math.random().toString()
-    constructor(ws: WebSocket) {
-        this.ws = ws
+    status: ConnectStatus = ConnectStatus.Created
+    connectId: string = Math.random().toString()
+    listener: Map<string, Function> = new Map()
+    watch: string[] = []
+
+    private on(event: string, fn: Function) {
+        this.listener.set(event, fn)
+    }
+    private off(event: string) {
+        this.listener.delete(event)
     }
 
+
+    constructor(ws: WebSocket) {
+        this.ws = ws
+        this.create()
+    }
+
+    private create() {
+        this.ws.on('connection', () => {
+            this.init()
+        })
+        this.ws.on('message', (data, isBinary) => {
+            if (!isBinary) return
+            // todo: 异常处理
+            const { event, playload } = JSON.parse(data.toString())
+            const listener = this.listener.get(event)
+            if (listener) listener(playload)
+        })
+    }
+
+    private init() {
+        this.status = ConnectStatus.Inited
+        this.ws.send(JSON.stringify({
+            'event': 'init',
+            'payload': this.connectId
+        }))
+        this.on('regist', (playload: string[]) => {
+            this.watch = this.watch.concat(playload)
+            this.regist()
+            this.off('regist')
+        })
+    }
+
+    private regist(){
+        
+    }
 }
