@@ -1,5 +1,5 @@
 {
-  "name": "nextfy-ws-server",
+  "name": "nextfy-connect-server",
   "version": "1.0.0",
   "main": "lib/cjs/index.js",
   "module": "lib/mjs/index.js",
