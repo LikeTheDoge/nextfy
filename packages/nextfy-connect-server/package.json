@@ -30,6 +30,7 @@
     "vite": "^2.3.4"
   },
   "dependencies": {
+    "nextfy-reactive": "^1.0.0",
     "ws": "^8.6.0"
   }
 }
