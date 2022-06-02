@@ -33,7 +33,6 @@ export class Connection {
         this.listener.delete(event)
     }
 
-
     constructor(ws: WebSocket) {
         this.ws = ws
         this.create()

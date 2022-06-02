@@ -20,7 +20,7 @@ export class ValueTransporter<T extends Object> implements Transporter {
 
     events() {
         return {
-            ['get:' + this.name]: (connect: Connection) => {
+            [`get:${this.name}`]: (connect: Connection) => {
                 connect.send(`val:${this.name}`, this.value.val())
             }
         }
